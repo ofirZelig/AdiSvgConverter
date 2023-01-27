@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Check if brew is installed
+if ! command -v brew &> /dev/null; then
+    # Install brew
+    echo "Homebrew is not installed. Installing..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+fi
+
+# Check if librsvg is installed
+if ! command -v rsvg-convert &> /dev/null; then
+    # Install librsvg
+    echo "librsvg is not installed. Installing..."
+    brew install librsvg
+fi
+
+# Input file
+input_file=$(osascript -e 'tell app "Finder" to POSIX path of (choose file with prompt "Select a SVG file")')
+output_name="output"
+
+# Convert to PNG
+rsvg-convert -f png -o "${output_name}.png" "${input_file}"
+
+# Convert to JPEG
+rsvg-convert -f jpeg -o "${output_name}.jpeg" "${input_file}"
+
+# Convert to PDF
+rsvg-convert -f pdf -o "${output_name}.pdf" "${input_file}"
+
+echo "Conversion complete! Output files are located in the current directory."
